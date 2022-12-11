@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-mkdocs" class="md-skip">
+        <a href="#requirements" class="md-skip">
           Skip to content
         </a>
       
@@ -95,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Welcome to MkDocs
+              Home
             
           </span>
         </div>
@@ -190,47 +190,9 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Welcome to MkDocs
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="." class="md-nav__link md-nav__link--active">
-        Welcome to MkDocs
+        Home
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -256,28 +218,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -291,21 +231,234 @@
                   
 
 
-<h1 id="welcome-to-mkdocs">Welcome to MkDocs</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
+<hr />
+<p>Golem in the Box DIY Guide
+**************************</p>
+<p>.. highlight:: sh</p>
+<p>.. todo:: paragraph about reasons why: - official version ran out of
+stock - bigger ssd - newer not yet released rpi - experimentation</p>
+<h1 id="requirements">Requirements</h1>
 <ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
+<li>
+<p>Some Raspberry Pi 4: either RPi 4B, 8 GiB RAM [TBC]; or CM4. You
+  can also try other SBC with Cortex-A72 SoC, but those we didn't test
+  so YMMV.</p>
+</li>
+<li>
+<p>Storage: NVMe SSD 2 TB</p>
+</li>
 </ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
+<p>(we don't recommend USB SSD because of low transfer [TBC], but you
+  have to use them if you use RPi 4B)</p>
+<ul>
+<li>appropriate 5 V power supply</li>
+</ul>
+<p>.. todo:: reference official RPI recommendation about pwr supply,
+  iiuc min 2 A</p>
+<p>.. caution::</p>
+<pre><code>    It's really important to have a reliable power supply! Some USB phone
+    chargers do not in fact supply 5.0 V, but slightly less (for example,
+    4.9 V) and while this is enough for charging a smartphone, it's not
+    enough for Raspberry Pi. If you encounter kernel logs in dmesg about
+    "undervoltage", that's definitely the case. If in doubt, just measure
+    the voltage under load. Use a standard multimeter or buy cheap USB power
+    meters for about 5 € on AliExpress.
 </code></pre>
+<p>.. todo:: zdjęcie: USB power meter .. todo:: zdjęcie: IKEA pwr
+  supply scribbled</p>
+<ul>
+<li>
+<p>For CM4:</p>
+</li>
+<li>
+<p>carrier board capable of connecting NVMe/SATA SSD</p>
+</li>
+<li>
+<p>USB-C to USB-A cable</p>
+</li>
+<li>
+<p>For rpi4b:</p>
+</li>
+<li>
+<p>SD card (min 32 GB)</p>
+</li>
+<li>USB SD card reader</li>
+<li>
+<p>external SSD enclosure</p>
+</li>
+<li>
+<p>consider enclosure (optional, but recommended)</p>
+</li>
+<li>
+<p>last but not least, a computer running reasonably recent GNU/Linux
+  distribution, preferably Debian testing or latest Ubuntu.</p>
+</li>
+</ul>
+<h1 id="before-starting">Before starting</h1>
+<p>.. caution::</p>
+<pre><code>- Please observe ESD precautions. You can damage integrated circuits (on
+  RPi, CM4, SSD and to a lesser extent the carrier board) just by touching
+  their pin or exposed traces by hand. Ground yourself before handling the
+  boards (for example by touching uninsulated metal parts on radiator in
+  your room if you think it's grounded to your local earth) and handle the
+  boards by the edges or big metal parts (like Ethernet port on RPi). If
+  you're laying boards on the desk, you can rest them on the plastic bags,
+  in which the boards arrived.
+
+- (For RPi 4B) Shorting +5V pins to any other pin on P5 header while powered
+  up WILL damage the board. If you're not planning to power RPi via those
+  pins (and you shoudn't if you don't know what you're doing), we recommend
+  you put short pieces of insulation from 0,75 mm² cable covering them
+  completely to prevent from accidentally touching anything metallic in the
+  vincinity.
+</code></pre>
+<h1 id="instructions-for-cm4">Instructions for CM4</h1>
+<p>.. todo:: HW assembly instructions</p>
+<ol>
+<li>
+<p>Put CM4 in its carrier board.</p>
+<p>.. todo:: image</p>
+<p>.. caution:: Do not repeatedly plug and unplug CM4 module. Mezzanine
+connectors (those long multi-pin connectors) are rated for 30
+cycles.</p>
+</li>
+<li>
+<p>Connect SSD to the carrier board and secure with a screw. The SSD
+    goes into the connector at an angle and then pivots towards the nut,
+    which is soldered to the PCB. It should be parallel to PCB when
+    screwed.</p>
+</li>
+<li>
+<p>Download the image available at FIXME. Optionally, you can
+    :ref:<code>compile the    image yourself (see below) &lt;compile&gt;</code>.</p>
+<p>.. todo:: link</p>
+</li>
+<li>
+<p>Optionally, install <code>bmap</code> flashing tool.</p>
+<pre><code> sudo apt-get install bmap-tools
+</code></pre>
+</li>
+<li>
+<p>Download and build <code>usbboot</code> tool from Raspberry Pi foundation::</p>
+<pre><code> git clone https://github.com/raspberrypi/usbboot
+ cd usbboot
+ make
+</code></pre>
+</li>
+<li>
+<p>Prepare for flashing the eMMC: hold the BOOT button (or short the
+    respective jumper) and connect the USB-C port with a USB-C/A cable.</p>
+</li>
+<li>
+<p>Execute <code>./rpiboot</code>::</p>
+<pre><code> ./rpiboot
+</code></pre>
+<p>You should see that CM4 was discovered and attached as <code>/dev/sdX</code>.
+It should also be linked as something like
+<code>/dev/disk/by-id/usb-RPi-MSD-_0001_????????-0:0</code>.</p>
+</li>
+<li>
+<p>Flash the image to CM4::</p>
+<pre><code> sudo bmaptool copy core-image-full-cmdline-raspberrypi4-64.wic.bmap /dev/disk/by-id/usb-RPi-MSD-_0001_????????-0:0
+</code></pre>
+<p>Or if you don't have bmaptool::</p>
+<pre><code> sudo dd if=core-image-full-cmdline-raspberrypi4-64.wic.bmap of=/dev/disk/by-id/usb-RPi-MSD-_0001_????????-0:0 bs=4M iflag=fullblock oflag=direct conv=sparse,fsync status=progress
+</code></pre>
+</li>
+<li>
+<p>Remove the USB cable and plug the board to power supply. It should
+    start Golem in the Box. Now proceed according to official
+    instructions.</p>
+</li>
+</ol>
+<p>.. todo::</p>
+<p>ssd formatting?</p>
+<h1 id="instructions-for-rpi-4b">Instructions for RPi 4B</h1>
+<ol>
+<li>
+<p>Assemble RPi 4B and it's components: put the board in the enclosure,
+    connect SSD.</p>
+</li>
+<li>
+<p>Download the image available at FIXME. Optionally, you can
+    :ref:<code>compile the    image yourself (see below) &lt;compile&gt;</code>.</p>
+<p>.. todo:: link</p>
+</li>
+<li>
+<p>Put SD card in the reader (and plug the reader to the computer if
+    it's an external reader). Flash the image to the SD card (assuming
+    the card is called <code>/dev/mmcblk0</code>)::</p>
+<pre><code> sudo bmaptool copy core-image-full-cmdline-raspberrypi4-64.wic.bmap /dev/mmcblk0
+</code></pre>
+<p>Or if you don't have bmaptool::</p>
+<pre><code> sudo dd if=core-image-full-cmdline-raspberrypi4-64.wic.bmap of=/dev/mmcblk0 bs=4M iflag=fullblock oflag=direct conv=sparse,fsync status=progress
+</code></pre>
+</li>
+<li>
+<p>When the reader LED stops blinking, take the card from the reader
+    and put in RPi. Plug the RPi to power supply and proceed according
+    to official instructions.</p>
+</li>
+</ol>
+<p>.. todo::</p>
+<p>ssd formatting?</p>
+<p>.. _compile:</p>
+<h1 id="compiling-the-image-yourself">Compiling the image yourself</h1>
+<p>.. todo:: paragraph If you want to</p>
+<pre><code>- have more trusted image (we didn't include anything wrong there, but you
+  might want to check yourself),
+- update sw to newer versions,
+- add other SW not included in official image,
+- customise your image in some other way,
+- run a development version of the image, with ssh daemon and other
+  debugging tools,
+- contribute your changes back to our repo,
+- or just tinkering
+
+However, if you're compiling, you're on your own and we most likely can't
+help you, because most problems encoutered here are related to local
+machine's configuration, and we're not in business of debugging people's
+computers.
+</code></pre>
+<ol>
+<li>
+<p>Download <code>kas</code> and <code>kas-container</code>. If you use at least Debian 12
+    (testing at the time of writing) or Ubuntu 22.10 (kinetic), you can
+    install them from apt::</p>
+<pre><code> apt-get install kas
+</code></pre>
+<p>Otherwise you need to download the <code>kas-container</code> tool from
+https://github.com/siemens/kas. (Older versions of packages don't
+ship <code>kas-container</code> script).</p>
+</li>
+<li>
+<p>Add yourself to <code>docker</code> group::</p>
+<pre><code> sudo gpasswd -a username docker
+</code></pre>
+<p>This is required for kas-container to work.</p>
+</li>
+<li>
+<p>Clone the
+    <code>official Golem in the Box repository    &lt;https://github.com/golemfactory/golem-in-the-box&gt;</code>__::</p>
+<pre><code> git clone https://github.com/golemfactory/golem-in-the-box
+ cd golem-in-the-box
+</code></pre>
+</li>
+<li>
+<p>Build the images::</p>
+<pre><code> kas-container --repo-rw build kas-project-rpi4.yml
+</code></pre>
+<p>The build process can take several hours, depending on your machine.</p>
+<p>If everything went well, the images are available at
+<code>build/tmp/deploy/images/raspberrypi4-64/core-image-full-cmdline-raspberrypi4-64.wic</code>,
+<code>build/tmp/deploy/images/raspberrypi4-64/core-image-full-cmdline-raspberrypi4-64.wic.bmap</code>,
+and
+<code>build/tmp/deploy/images/raspberrypi4-64/core-image-full-cmdline-raspberrypi4-64.wic.bz2</code>.</p>
+</li>
+</ol>
+<h1 id="debugging-official-board-with-serial">Debugging official board with serial</h1>
+<p>.. todo:: describe soldering serial, recompilation with debug commit</p>
+<p>.. vim: tw=80 ts=4 sts=4 sw=4 et</p>
 
 
 
